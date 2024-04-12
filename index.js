@@ -4,6 +4,17 @@ import fs from "fs/promises";
 
 const __dirname = import.meta.dirname;
 
+async function readPackageJSON() {
+  try {
+    const filePath = `${process.cwd()}/package.json`;
+    const data = await fs.readFile(filePath, 'utf8');
+    const packageJSON = JSON.parse(data);
+    console.log(packageJSON);
+  } catch (error) {
+    console.error('Error reading the package.json file:', error);
+  }
+}
+
 async function readChangesFile() {
   try {
     const filePath = `${__dirname}/changes.json`;
@@ -16,3 +27,4 @@ async function readChangesFile() {
 }
 
 readChangesFile();
+readPackageJSON();

@@ -6,10 +6,10 @@
   },
   "description": "Fetches and overlays a json file over package.json in cwd",
   "license": "MIT",
-  "type": "module",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "lint": "prettier --check .",
+    "lint": "xprettier --check .",
     "lint:fix": "prettier --write ."
   },
   "prettier": "@github/prettier-config",

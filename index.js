@@ -1,4 +1,10 @@
 import fs from "fs/promises";
+import readline from 'readline';
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 const __dirname = import.meta.dirname;
 
@@ -24,16 +30,6 @@ async function readChangesFile() {
   }
 }
 
-async function promptUserForOverwrite(key) {
-  // Implement a user prompt using your preferred method, e.g., readline
-  // This is a placeholder for the actual implementation
-  console.log(
-    `The property '${key}' already exists. Do you want to overwrite it? (yes/no)`
-  );
-  // Wait for user input and return true if the user confirms to overwrite
-  return true; // This should be the user's decision
-}
-
 async function deepMergeChanges(changes, packageJSON) {
   for (const [key, value] of Object.entries(changes)) {
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
@@ -47,12 +43,7 @@ async function deepMergeChanges(changes, packageJSON) {
       packageJSON[key] = value;
     }
   }
-import readline from 'readline';
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+}
 
 async function promptUserForOverwrite(key) {
   return new Promise((resolve) => {
@@ -72,4 +63,4 @@ async function applyChanges() {
   rl.close();
 }
 
-applyChanges();
+applyChanges()

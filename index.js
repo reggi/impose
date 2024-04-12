@@ -1,5 +1,3 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import fs from "fs/promises";
 
 const __dirname = import.meta.dirname;
@@ -15,12 +13,6 @@ async function readPackageJSON() {
   }
 }
 
-async function promptUserForOverwrite(key) {
-  // Implement a user prompt using your preferred method, e.g., readline
-  // This is a placeholder for the actual implementation
-  console.log(`The property '${key}' already exists. Do you want to overwrite it? (yes/no)`);
-  // Wait for user input and return true if the user confirms to overwrite
-  return true; // This should be the user's decision
 async function readChangesFile() {
   try {
     const filePath = `${__dirname}/changes.json`;
@@ -32,9 +24,19 @@ async function readChangesFile() {
   }
 }
 
+async function promptUserForOverwrite(key) {
+  // Implement a user prompt using your preferred method, e.g., readline
+  // This is a placeholder for the actual implementation
+  console.log(
+    `The property '${key}' already exists. Do you want to overwrite it? (yes/no)`
+  );
+  // Wait for user input and return true if the user confirms to overwrite
+  return true; // This should be the user's decision
+}
+
 async function deepMergeChanges(changes, packageJSON) {
   for (const [key, value] of Object.entries(changes)) {
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
       if (!packageJSON[key]) packageJSON[key] = {};
       await deepMergeChanges(value, packageJSON[key]);
     } else {

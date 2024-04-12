@@ -30,14 +30,15 @@ async function readChangesFile() {
   }
 }
 
-async function deepMergeChanges(changes, packageJSON) {
+async function deepMergeChanges(changes, packageJSON, parentKey = '') {
   for (const [key, value] of Object.entries(changes)) {
+    const fullKey = parentKey ? `${parentKey}.${key}` : key;
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
       if (!packageJSON[key]) packageJSON[key] = {};
-      await deepMergeChanges(value, packageJSON[key]);
+      await deepMergeChanges(value, packageJSON[key], fullKey);
     } else {
       if (packageJSON.hasOwnProperty(key)) {
-        const overwrite = await promptUserForOverwrite(key);
+        const overwrite = await promptUserForOverwrite(fullKey);
         if (!overwrite) continue;
       }
       packageJSON[key] = value;

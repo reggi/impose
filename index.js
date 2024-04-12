@@ -47,6 +47,19 @@ async function deepMergeChanges(changes, packageJSON) {
       packageJSON[key] = value;
     }
   }
+import readline from 'readline';
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+async function promptUserForOverwrite(key) {
+  return new Promise((resolve) => {
+    rl.question(`The property '${key}' already exists. Do you want to overwrite it? (yes/no) `, (answer) => {
+      resolve(answer.trim().toLowerCase() === 'yes');
+    });
+  });
 }
 
 async function applyChanges() {
@@ -56,6 +69,7 @@ async function applyChanges() {
   // After merging, write the updated packageJSON back to the package.json file
   const filePath = `${process.cwd()}/package.json`;
   await fs.writeFile(filePath, JSON.stringify(packageJSON, null, 2), "utf8");
+  rl.close();
 }
 
 applyChanges();

@@ -1,13 +1,17 @@
 {
   "name": "impose",
   "version": "2.0.1",
+  "description": "Fetches and overlays a json file over package.json in cwd",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reggi/impose.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
   "bin": {
     "impose": "index.js"
   },
-  "description": "Fetches and overlays a json file over package.json in cwd",
-  "license": "MIT",
-  "main": "index.js",
-  "type": "module",
   "scripts": {
     "lint": "prettier --check .",
     "lint:fix": "prettier --write ."

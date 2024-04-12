@@ -9,7 +9,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "lint": "xprettier --check .",
+    "lint": "prettier --check .",
     "lint:fix": "prettier --write ."
   },
   "prettier": "@github/prettier-config",

@@ -7,11 +7,11 @@ const __dirname = import.meta.dirname;
 async function readPackageJSON() {
   try {
     const filePath = `${process.cwd()}/package.json`;
-    const data = await fs.readFile(filePath, 'utf8');
+    const data = await fs.readFile(filePath, "utf8");
     const packageJSON = JSON.parse(data);
-    console.log(packageJSON);
+    return packageJSON;
   } catch (error) {
-    console.error('Error reading the package.json file:', error);
+    return {};
   }
 }
 
@@ -20,9 +20,9 @@ async function readChangesFile() {
     const filePath = `${__dirname}/changes.json`;
     const data = await fs.readFile(filePath, "utf8");
     const changes = JSON.parse(data);
-    console.log(changes);
+    return changes;
   } catch (error) {
-    console.error("Error reading the changes.json file:", error);
+    return {};
   }
 }
 

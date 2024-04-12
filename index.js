@@ -20,10 +20,13 @@ async function readPackageJSON() {
   }
 }
 
-async function readChangesFile() {
+async function readChangesFile(url) {
   try {
-    const filePath = `${__dirname}/changes.json`
-    const data = await fs.readFile(filePath, 'utf8')
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.text();
     const changes = JSON.parse(data)
     return changes
   } catch (error) {
@@ -60,7 +63,13 @@ async function promptUserForOverwrite(key) {
 }
 
 async function applyChanges() {
-  const changes = await readChangesFile()
+  const url = process.argv[2];
+  if (!url) {
+    console.error('Please provide a URL to the changes file as an argument.');
+    process.exit(1);
+  }
+
+  const changes = await readChangesFile(url);
   let packageJSON = await readPackageJSON()
   await deepMergeChanges(changes, packageJSON)
   // After merging, write the updated packageJSON back to the package.json file

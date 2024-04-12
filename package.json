@@ -1,0 +1,23 @@
+{
+  "name": "impose",
+  "version": "1.0.1",
+  "bin": {
+    "impose": "index.js"
+  },
+  "description": "Fetches and overlays a json file over package.json in cwd",
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "lint": "prettier --check .",
+    "lint:fix": "prettier --write ."
+  },
+  "prettier": "@github/prettier-config",
+  "dependencies": {
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "@github/prettier-config": "^0.0.6",
+    "prettier": "^3.2.5"
+  }
+}

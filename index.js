@@ -7,8 +7,6 @@ const rl = readline.createInterface({
   output: process.stdout,
 })
 
-const __dirname = import.meta.dirname
-
 async function readPackageJSON() {
   try {
     const filePath = `${process.cwd()}/package.json`
@@ -22,11 +20,11 @@ async function readPackageJSON() {
 
 async function readChangesFile(url) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url)
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
-    const data = await response.text();
+    const data = await response.text()
     const changes = JSON.parse(data)
     return changes
   } catch (error) {
@@ -43,7 +41,6 @@ async function deepMergeChanges(changes, packageJSON, parentKey = '') {
     } else {
       if (packageJSON.hasOwnProperty(key) && packageJSON[key] !== value) {
         const overwrite = await promptUserForOverwrite(fullKey)
-        console.log({overwrite})
         if (!overwrite) continue
       }
       packageJSON[key] = value
@@ -63,13 +60,13 @@ async function promptUserForOverwrite(key) {
 }
 
 async function applyChanges() {
-  const url = process.argv[2];
+  const url = process.argv[2]
   if (!url) {
-    console.error('Please provide a URL to the changes file as an argument.');
-    process.exit(1);
+    console.error('Please provide a URL to the changes file as an argument.')
+    process.exit(1)
   }
 
-  const changes = await readChangesFile(url);
+  const changes = await readChangesFile(url)
   let packageJSON = await readPackageJSON()
   await deepMergeChanges(changes, packageJSON)
   // After merging, write the updated packageJSON back to the package.json file

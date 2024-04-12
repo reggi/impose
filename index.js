@@ -1,17 +1,17 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs/promises';
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import fs from "fs/promises";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
 async function readChangesFile() {
   try {
     const filePath = `${__dirname}/changes.json`;
-    const data = await fs.readFile(filePath, 'utf8');
+    const data = await fs.readFile(filePath, "utf8");
     const changes = JSON.parse(data);
     console.log(changes);
   } catch (error) {
-    console.error('Error reading the changes.json file:', error);
+    console.error("Error reading the changes.json file:", error);
   }
 }
 

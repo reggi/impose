@@ -1,6 +1,6 @@
 {
   "name": "impose",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Fetches and overlays a json file over package.json in cwd",
   "repository": {
     "type": "git",

@@ -15,6 +15,12 @@ async function readPackageJSON() {
   }
 }
 
+async function promptUserForOverwrite(key) {
+  // Implement a user prompt using your preferred method, e.g., readline
+  // This is a placeholder for the actual implementation
+  console.log(`The property '${key}' already exists. Do you want to overwrite it? (yes/no)`);
+  // Wait for user input and return true if the user confirms to overwrite
+  return true; // This should be the user's decision
 async function readChangesFile() {
   try {
     const filePath = `${__dirname}/changes.json`;
@@ -26,5 +32,28 @@ async function readChangesFile() {
   }
 }
 
-readChangesFile();
-readPackageJSON();
+async function deepMergeChanges(changes, packageJSON) {
+  for (const [key, value] of Object.entries(changes)) {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      if (!packageJSON[key]) packageJSON[key] = {};
+      await deepMergeChanges(value, packageJSON[key]);
+    } else {
+      if (packageJSON.hasOwnProperty(key)) {
+        const overwrite = await promptUserForOverwrite(key);
+        if (!overwrite) continue;
+      }
+      packageJSON[key] = value;
+    }
+  }
+}
+
+async function applyChanges() {
+  const changes = await readChangesFile();
+  let packageJSON = await readPackageJSON();
+  await deepMergeChanges(changes, packageJSON);
+  // After merging, write the updated packageJSON back to the package.json file
+  const filePath = `${process.cwd()}/package.json`;
+  await fs.writeFile(filePath, JSON.stringify(packageJSON, null, 2), "utf8");
+}
+
+applyChanges();

@@ -34,15 +34,16 @@ async function readChangesFile(url) {
   }
 }
 
-async function deepMergeChanges(changes, packageJSON, parentKey = '') {
+async function deepMergeChanges(changes, packageJSON, skipPrompt = false, parentKey = '') {
   for (const [key, value] of Object.entries(changes)) {
     const fullKey = parentKey ? `${parentKey}.${key}` : key
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
       if (!packageJSON[key]) packageJSON[key] = {}
-      await deepMergeChanges(value, packageJSON[key], fullKey)
+      await deepMergeChanges(value, packageJSON[key], skipPrompt, fullKey)
     } else {
       if (packageJSON.hasOwnProperty(key) && packageJSON[key] !== value) {
-        const overwrite = await promptUserForOverwrite(fullKey)
+        const overwrite = skipPrompt ? true : await promptUserForOverwrite(fullKey)
+        console.log({overwrite})
         if (!overwrite) continue
       }
       packageJSON[key] = value
@@ -53,7 +54,7 @@ async function deepMergeChanges(changes, packageJSON, parentKey = '') {
 async function promptUserForOverwrite(key) {
   return new Promise(resolve => {
     rl.question(
-      `${chalk.green(`The property '${key}' already exists. Do you want to overwrite it?`)} (yes/no)`,
+      `${chalk.green(`The property '${key}' already exists. Do you want to overwrite it?`)} (yes/no) `,
       answer => {
         resolve(['yes', 'y'].includes(answer.trim().toLowerCase()))
       },
@@ -62,7 +63,13 @@ async function promptUserForOverwrite(key) {
 }
 
 async function applyChanges() {
-  const url = process.argv[2]
+  const yFlag = '-y'
+  const yesFlag = '--yes'
+  const flags = [yFlag, yesFlag]
+  const hasYesFlag = process.argv.some(arg => flags.includes(arg))
+  const argvWithoutFlags = process.argv.filter(arg => !flags.includes(arg))
+  const url = argvWithoutFlags[2]
+
   if (!url) {
     console.error('Please provide a URL to the changes file as an argument.')
     process.exit(1)
@@ -70,7 +77,7 @@ async function applyChanges() {
 
   const changes = await readChangesFile(url)
   let packageJSON = await readPackageJSON()
-  await deepMergeChanges(changes, packageJSON)
+  await deepMergeChanges(changes, packageJSON, hasYesFlag)
   // After merging, write the updated packageJSON back to the package.json file
   const filePath = `${process.cwd()}/package.json`
   await fs.writeFile(filePath, JSON.stringify(packageJSON, null, 2), 'utf8')

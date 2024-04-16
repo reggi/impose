@@ -7,8 +7,8 @@ Here https://reggi.github.io/prettier-config.json looks like:
 ```json
 {
   "scripts": {
-    "lint": "prettier --check .",
-    "lint:fix": "prettier --write ."
+    "style": "prettier --check .",
+    "style:fix": "prettier --write ."
   },
   "prettier": "@github/prettier-config",
   "devDependencies": {
